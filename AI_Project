@@ -1,0 +1,54 @@
+
+actions = ["L", "R", "U", "D"]
+solution = []
+h1Value = []
+h2Value = []
+curr_state = [[4, 1, 3], [0, 2, 8], [7, 6, 5]]
+goal_state = [[1, 2, 3], [8, 0, 4], [7, 6, 5]]
+
+
+def readState(fname):                      # read string from file, then pass
+    # initial and goal states into lists
+    print("hello")
+
+
+def MDistance(curr_state, goal_state, node):  # find the manhattan distance of the node from
+    # current state to goal state
+    x = 0
+    y = 0
+    xGoal = 0
+    yGoal = 0
+    for i in range(3):
+        print(curr_state[i])
+        for j in range(3):
+            if curr_state[i][j] == node:
+                x, y = i, j
+            if goal_state[i][j] == node:
+                xGoal, yGoal = i, j
+    return abs(x - xGoal) + abs(y - yGoal)
+
+
+def NScore():
+    print("hello")
+
+
+def Asearch():
+    a = 0
+
+
+def main():
+    a = MDistance(curr_state, goal_state, 4)
+    print(a)
+    # get file
+    # get initial state and goal state using readState
+
+    # output:
+    # initial state
+    # goal state
+    # depth level d
+    # total of nodes generated
+    # solution
+    # f(n) value
+
+
+main()
