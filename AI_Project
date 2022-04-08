@@ -3,8 +3,9 @@ actions = ["L", "R", "U", "D"]
 solution = []
 h1Value = []
 h2Value = []
-curr_state = [[4, 1, 3], [0, 2, 8], [7, 6, 5]]
-goal_state = [[1, 2, 3], [8, 0, 4], [7, 6, 5]]
+curr_state = [8, 1, 3, 0, 2, 4, 7, 6, 5]
+
+goal_state = [1, 2, 3, 8, 0, 4, 7, 6, 5]
 
 
 def readState(fname):                      # read string from file, then pass
@@ -12,33 +13,41 @@ def readState(fname):                      # read string from file, then pass
     print("hello")
 
 
-def MDistance(curr_state, goal_state, node):  # find the manhattan distance of the node from
+def MDistance(curr_state, goal_state):  # find the sum of manhattan distance of the node from
     # current state to goal state
-    x = 0
-    y = 0
-    xGoal = 0
-    yGoal = 0
-    for i in range(3):
-        print(curr_state[i])
-        for j in range(3):
-            if curr_state[i][j] == node:
-                x, y = i, j
-            if goal_state[i][j] == node:
-                xGoal, yGoal = i, j
-    return abs(x - xGoal) + abs(y - yGoal)
+    distance = 0
+    for i,item in enumerate(curr_state):
+        if item != 0:
+            curr_row,curr_col = int(i/ 3) , i % 3
+            goal_row,goal_col = int(goal_state.index(item) /3),goal_state.index(item) % 3
+            distance += abs(curr_row-goal_row) + abs(curr_col - goal_col)
+    return distance
 
-
-def NScore():
-    print("hello")
-
+def NScore(curr_state, goal_state):
+    P = MDistance(curr_state,goal_state)
+    S = 0
+    Nscore = 0
+    order = [0,1,2,5,8,7,6,3]
+    if curr_state[4] != goal_state[4]:
+        S += 1
+    for num in order:
+        if (curr_state[num] != 0):
+            if (curr_state[num] != goal_state[num]):
+                S += 2
+    Nscore = P + 3 * S
+    return Nscore
 
 def Asearch():
     a = 0
 
 
 def main():
-    a = MDistance(curr_state, goal_state, 4)
-    print(a)
+    print(curr_state)
+      
+    print(goal_state)
+    a = MDistance(curr_state, goal_state)
+    b = NScore(curr_state, goal_state)
+    print(b)
     # get file
     # get initial state and goal state using readState
 
