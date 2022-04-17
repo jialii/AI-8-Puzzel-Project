@@ -7,7 +7,7 @@ curr_state = [8, 1, 3, 0, 2, 4, 7, 6, 5]
 
 goal_state = [1, 2, 3, 8, 0, 4, 7, 6, 5]
 
-def ReadIn(filename):
+def ReadIn(filename): #Takes an input file, and process the data into a list of number   
     f = open(filename, 'r')
     matrix = [];
     for line in f:
@@ -17,11 +17,10 @@ def ReadIn(filename):
             continue;
         for i in range(3):
             nums[i] = int(nums[i])
-        matrix.append(nums);
+            matrix.append(nums[i]);
     return matrix;
-def readState(fname):                      # read string from file, then pass
-    # initial and goal states into lists
-    print("hello")
+
+
 
 
 def MDistance(curr_state, goal_state):  # find the sum of manhattan distance of the node from
@@ -48,8 +47,16 @@ def NScore(curr_state, goal_state):
     Nscore = P + 3 * S
     return Nscore
 
-def Asearch():
-    a = 0
+def Asearch(h, curr_state, goal_state):
+    state_space = [curr_state];  #This makes sure there is no repeated states. 
+    blank_pos = curr_state.index(0);
+    frontier = [];
+    if blank_pos - 1 >= 0 and blank_pos - 1 != 2 and  blank_pos - 1 != 5: #Check for the possibility of moving blank space to the left
+        potential_state = curr_state.copy();
+        potential_state[blank_pos-1],potential_state[blank_pos] = potential_state[blank_pos], potential_state[blank_pos-1]
+        if potential_state not in state_space:
+            frontier.append('L');
+
 
 
 def main():
