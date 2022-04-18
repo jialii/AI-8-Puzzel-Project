@@ -56,10 +56,11 @@ def NScore(curr_state, goal_state):
 
 def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
     state_space = [];  #This makes sure there is no repeated states.  
-    frontier = []
+    totalNodes = []
     solution = []
     po = False
     while goalReached == False :
+        frontier = []
         if not curr_state in state_space:
             state_space.append(curr_state)
         blank_pos = curr_state.index(0)
@@ -109,18 +110,16 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
                 frontier.append(['U', potential_state,hVal+step_cost])
                 state_space.append(potential_state)
                 po = True
-                
+
         if(po == False):
             if curr_state in solution:
                 solution.remove(curr_state)
-                curr_state = solution[-1]
-                step_cost -= 1
-        print("FRONT",frontier)
-         
-        if (len(solution)!=0):
-            min_fVal = solution[-1][2]
+            step_cost -= 1
+            totalNodes[step_cost].remove(curr_state)
+
+        #print("FRONT",frontier)
+        min_fVal = INFINITY
         for item in frontier:           #the state with minimum f value becomes current state
-            min_fVal = frontier[0][2]
             
             if item[2] <= min_fVal:
                 min_fVal = item[2]
@@ -131,7 +130,8 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
                 #print("NODE",node,"\n")
                 frontier.remove(node)
                 solution.append(node)
-                
+
+        totalNodes[step_cost] = frontier    
         step_cost+=1       
         if(curr_state == goal_state):   #stop the loop if goal is reached
             goalReached = True
