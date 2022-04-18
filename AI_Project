@@ -2,14 +2,6 @@
 
 
 from json.encoder import INFINITY
-from tkinter import NS
-
-
-h1Value = []
-h2Value = []
-curr_state = [8, 1, 3, 0, 2, 4, 7, 6, 5]
-
-goal_state = [1, 2, 3, 8, 0, 4, 7, 6, 5]
 
 def ReadIn(filename): #Takes an input file, and process the data into a list of number   
     f = open(filename, 'r')
@@ -22,15 +14,15 @@ def ReadIn(filename): #Takes an input file, and process the data into a list of 
         for i in range(3):
             nums[i] = int(nums[i])
             matrix.append(nums[i])
-    curr_state = [];
-    goal_state = [];
+    curr_state = []
+    goal_state = []
     for i in range(18):
         if i<9:
-            curr_state.append(matrix[i]);
+            curr_state.append(matrix[i])
         else:
-            goal_state.append(matrix[i]);
+            goal_state.append(matrix[i])
 
-    return curr_state, goal_state;
+    return curr_state, goal_state
 
 
 def MDistance(curr_state, goal_state):  # find the sum of manhattan distance of the node from
@@ -61,7 +53,6 @@ def NScore(curr_state, goal_state):
 
 
 
-
 def Asearch(h, curr_state, goal_state,goalReached=False):
     state_space = [curr_state];  #This makes sure there is no repeated states.  
     frontier = []
@@ -74,9 +65,9 @@ def Asearch(h, curr_state, goal_state,goalReached=False):
             potential_state[blank_pos-1],potential_state[blank_pos] = potential_state[blank_pos], potential_state[blank_pos-1]
             if potential_state not in state_space:
                 if (h == "MD"):
-                    hVal = MDistance(curr_state,goal_state)
+                    hVal = MDistance(curr_state,goal_state)+1
                 else:
-                    hVal = NScore(curr_state,goal_state)
+                    hVal = NScore(curr_state,goal_state)+1
                 frontier.append(['L', potential_state,hVal])
                 state_space.append(potential_state)
         if blank_pos in [0,1,3,4,6,7]: #Check for the possibility of moving blank space to the right
@@ -84,11 +75,11 @@ def Asearch(h, curr_state, goal_state,goalReached=False):
             potential_state[blank_pos+1],potential_state[blank_pos] = potential_state[blank_pos], potential_state[blank_pos+1]
             if potential_state not in state_space:
                 if (h == "MD"):
-                    hVal = MDistance(curr_state,goal_state)
+                    hVal = MDistance(curr_state,goal_state)+1
                 else:
-                    hVal = NScore(curr_state,goal_state)
+                    hVal = NScore(curr_state,goal_state)+1
 
-                #SHOULD BE APPENDIG F VALUE INSTEAD OF H VALUE
+                #STEP COST = 1
                 frontier.append(['R', potential_state,hVal])
                 state_space.append(potential_state)
         if blank_pos in [0,1,2,3,4,5]: #Check for the possibility of moving blank space to below
@@ -96,9 +87,9 @@ def Asearch(h, curr_state, goal_state,goalReached=False):
             potential_state[blank_pos+3],potential_state[blank_pos] = potential_state[blank_pos], potential_state[blank_pos+3]
             if potential_state not in state_space:
                 if (h == "MD"):
-                    hVal = MDistance(curr_state,goal_state)
+                    hVal = MDistance(curr_state,goal_state)+1
                 else:
-                    hVal = NScore(curr_state,goal_state)
+                    hVal = NScore(curr_state,goal_state)+1
                 frontier.append(['D', potential_state,hVal])
                 state_space.append(potential_state)
         if blank_pos in [3,4,5,6,7,8]: #Check for the possibility of moving blank space to above
@@ -106,9 +97,9 @@ def Asearch(h, curr_state, goal_state,goalReached=False):
             potential_state[blank_pos-3],potential_state[blank_pos] = potential_state[blank_pos], potential_state[blank_pos-3]
             if potential_state not in state_space:
                 if (h == "MD"):
-                    hVal = MDistance(curr_state,goal_state)
+                    hVal = MDistance(curr_state,goal_state)+1
                 else:
-                    hVal = NScore(curr_state,goal_state)
+                    hVal = NScore(curr_state,goal_state)+1
                 frontier.append(['U', potential_state,hVal])
                 state_space.append(potential_state)
      
@@ -117,32 +108,25 @@ def Asearch(h, curr_state, goal_state,goalReached=False):
             if item[2] <= min_fVal:
                 min_fVal = item[2]
                 node = item             #store the node with smallest f value
-                curr_state = item[1]
-            if (item == frontier[-1]):    
+                
+            if (item == frontier[-1]):
+                curr_state = node[1]
                 solution.append(node)
+                frontier.remove(node)
+                
         if(curr_state == goal_state):   #stop the loop if goal is reached
             goalReached = True
-
-    print(solution,'\n')
-    print(frontier,'\n')   
+    print(solution,"\n")   
     return frontier,solution          
 
-'''
-g = the movement cost to move from the starting point to a given square on the grid,
- following the path generated to get there. 
-h = the estimated movement cost to move from that given square on the grid to the final 
-destination. 
-'''
+
 
 def main():
-    #print(curr_state)
-      
-    #print(goal_state)
-    #a = MDistance(curr_state, goal_state)
-    #b = NScore(curr_state, goal_state)
-    initial_state, goal_state = ReadIn("Input1.txt")
-    print (initial_state, goal_state)
-    
+    #curr_state = [8,1,3,0,2,4,7,6,5]
+    #goal_state = [1,2,3,8,0,4,7,6,5]
+
+    curr_state ,goal_state = ReadIn("Sample_Input.txt")
+    print("hi")
     # get file
     # get initial state and goal state using readState
                      
@@ -161,10 +145,14 @@ def main():
 
     frontier, solution = Asearch("MD",curr_state,goal_state)
 
+    print('\n')
     print(len(solution))
     print(len(frontier))
     for item in (solution):
         print(item[0],end=" ")
+    print("\t")
+    for item in (solution):
+        print(item[-1],end=" ")
     # output:
     # initial state
     # goal state
