@@ -22,7 +22,15 @@ def ReadIn(filename): #Takes an input file, and process the data into a list of 
         for i in range(3):
             nums[i] = int(nums[i])
             matrix.append(nums[i])
-    return matrix
+    curr_state = [];
+    goal_state = [];
+    for i in range(18):
+        if i<9:
+            curr_state.append(matrix[i]);
+        else:
+            goal_state.append(matrix[i]);
+
+    return curr_state, goal_state;
 
 
 def MDistance(curr_state, goal_state):  # find the sum of manhattan distance of the node from
@@ -51,18 +59,6 @@ def NScore(curr_state, goal_state):
     return Nscore
 
 
-def ReadIn(filename):
-    f = open(filename, 'r')
-    matrix = []
-    for line in f:
-        line = line.strip()
-        nums = line.split(' ')
-        if len(nums) < 3:
-            continue
-        for i in range(3):
-            nums[i] = int(nums[i])
-        matrix.append(nums)
-    return matrix
 
 
 
@@ -144,7 +140,8 @@ def main():
     #print(goal_state)
     #a = MDistance(curr_state, goal_state)
     #b = NScore(curr_state, goal_state)
-    initial_state = ReadIn("Input1.txt")
+    initial_state, goal_state = ReadIn("Input1.txt")
+    print (initial_state, goal_state)
     
     # get file
     # get initial state and goal state using readState
