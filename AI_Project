@@ -49,7 +49,8 @@ def NScore(curr_state, goal_state):
             continue;
         if i == 7:
             dic [goal_state[order[i]]] = goal_state[order[0]]
-        dic [goal_state[order[i]]] = goal_state[order[i+1]]
+        else:
+            dic [goal_state[order[i]]] = goal_state[order[i+1]]
     if curr_state[4] != goal_state[4]:
         S += 1
     while count < 8:
@@ -89,8 +90,9 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
     else:
         hVal = NScore(curr_state,goal_state)
     solution.append(["",curr_state,hVal])
+    frontier = []
+    
     while goalReached == False :
-        frontier = []
         if not curr_state in state_space:
             state_space.append(curr_state)
         blank_pos = curr_state.index(0)
@@ -158,12 +160,12 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
             if item[2] <= min_fVal:
                 min_fVal = item[2]
                 node = item             #store the node with smallest f value
-                
-            if (item == frontier[-1]):
-                curr_state = node[1]
+        #print (frontier)      
+            
+        curr_state = node[1]
                 #print("NODE",node,"\n")
-                frontier.remove(node)
-                solution.append(node)
+        frontier.remove(node)
+        solution.append(node)
 
         step_cost+=1       
         if(curr_state == goal_state):   #stop the loop if goal is reached
@@ -201,11 +203,11 @@ def main():
     #curr_state = [2,0,6,1,3,7,4,5,8]
     #goal_state = [1,2,0,7,5,3,4,8,6]
     
-    curr_state, goal_state = ReadIn("Input1.txt")
-    format (curr_state, goal_state, "output1h1.txt" , "MD")
-    format (curr_state, goal_state, "output1h2.txt" , "h2")
-    #curr_state, goal_state = ReadIn("Input2.txt")
-    #format (curr_state, goal_state, "output2h1.txt" , "MD")
+    #curr_state, goal_state = ReadIn("Input1.txt")
+    #format (curr_state, goal_state, "output1h1.txt" , "MD")
+    #format (curr_state, goal_state, "output1h2.txt" , "h2")
+    curr_state, goal_state = ReadIn("Input2.txt")
+    format (curr_state, goal_state, "output2h1.txt" , "MD")
     #format (curr_state, goal_state, "output2h2.txt" , "h2")
     #curr_state, goal_state = ReadIn("Input3.txt")
     #format (curr_state, goal_state, "output3h1.txt" , "MD")
