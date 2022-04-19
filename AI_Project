@@ -41,13 +41,38 @@ def NScore(curr_state, goal_state):
     P = MDistance(curr_state,goal_state)
     S = 0
     Nscore = 0
+    dic = {};
+    count = 0;
     order = [0,1,2,5,8,7,6,3]
+    for i in range(8):
+        if goal_state[order[i]] == 0:
+            continue;
+        if i == 7:
+            dic [goal_state[order[i]]] = goal_state[order[0]]
+        dic [goal_state[order[i]]] = goal_state[order[i+1]]
     if curr_state[4] != goal_state[4]:
         S += 1
-    for num in order:
-        if (curr_state[num] != 0):
-            if (curr_state[num] != goal_state[num]):
-                S += 2
+    while count < 8:
+        if curr_state[count] == 0:
+            count+=1
+            continue;
+        prev = curr_state[order[count]];
+        if count == 7:
+            last = curr_state[order[0]];
+        else:
+            last = curr_state[order[count+1]];
+        if prev == 0:
+            count+=1;
+            continue
+        if prev not in dic:
+            print ("ptrb: ", prev)
+            S+=2;
+            count+=1;
+            continue;
+        if dic[prev] != last:
+            print ("not ", prev)
+            S+=2;
+        count+=1
     Nscore = P + 3 * S
     return Nscore
 
@@ -155,7 +180,7 @@ def format (curr_state, goal_state, filename, hfunc):
             print('\t', file = filename)
         print(curr_state[i], end=" ", file = filename)
 
-    print('\t')
+    print('\t', file = filename)
 
     for i in range(len(goal_state)):
         if (i % 3 == 0):
@@ -175,39 +200,21 @@ def format (curr_state, goal_state, filename, hfunc):
 def main():
     #curr_state = [2,0,6,1,3,7,4,5,8]
     #goal_state = [1,2,0,7,5,3,4,8,6]
-    curr_state ,goal_state = ReadIn("Input3.txt")
-    format (curr_state, goal_state, "outputTry1.txt" , "MD")
+    
+    curr_state, goal_state = ReadIn("Input1.txt")
+    format (curr_state, goal_state, "output1h1.txt" , "MD")
+    format (curr_state, goal_state, "output1h2.txt" , "h2")
+    #curr_state, goal_state = ReadIn("Input2.txt")
+    #format (curr_state, goal_state, "output2h1.txt" , "MD")
+    #format (curr_state, goal_state, "output2h2.txt" , "h2")
+    #curr_state, goal_state = ReadIn("Input3.txt")
+    #format (curr_state, goal_state, "output3h1.txt" , "MD")
+    #format (curr_state, goal_state, "output3h2.txt" , "h2")
     # get file
     # get initial state and goal state using readState
     #print(MDistance(curr_state,goal_state))              
     #output = open("fname","w");
-'''
-    for i in range(len(curr_state)):
-        if (i % 3 == 0):
-            print('\t')
-        print(curr_state[i], end=" ")
 
-    print('\t')
-
-    for i in range(len(goal_state)):
-        if (i % 3 == 0):
-            print('\t')
-        print(goal_state[i], end=" ")    
-
-    totalNodes, solution = Asearch("MD",curr_state,goal_state)
-
-    #totalNodes, solution = Asearch("NS",curr_state,goal_state)
-
-    print('\n')
-    print(len(solution)-1)
-    print(totalNodes)
-    for item in (solution):
-        if(item[0]!=""):
-            print(item[0],end=" ")
-    print("\t")
-    for item in (solution):
-        print(item[-1],end=" ")
- '''   
     # output:
     # initial state
     # goal state
