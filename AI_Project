@@ -54,16 +54,18 @@ def NScore(curr_state, goal_state):
 
 
 
-def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
+def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
     state_space = [];  #This makes sure there is no repeated states.  
-    totalNodes = []
     solution = []
     po = False
+    level = 0;
+    min_fVal = INFINITY
     while goalReached == False :
         frontier = []
         if not curr_state in state_space:
             state_space.append(curr_state)
         blank_pos = curr_state.index(0)
+        
         if blank_pos in [1,2,4,5,7,8]: #Check for the possibility of moving blank space to the left
             potential_state = curr_state.copy()
             potential_state[blank_pos-1],potential_state[blank_pos] = potential_state[blank_pos], potential_state[blank_pos-1]
@@ -72,7 +74,7 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
                     hVal = MDistance(curr_state,goal_state)
                 else:
                     hVal = NScore(curr_state,goal_state)
-                frontier.append(['L', potential_state,hVal+step_cost])
+                frontier.append(['L', potential_state,hVal+step_cost,level])
                 state_space.append(potential_state)
                 po = True
             
@@ -84,8 +86,10 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
                     hVal = MDistance(curr_state,goal_state)
                 else:
                     hVal = NScore(curr_state,goal_state)
+                print ("L", potential_state)
+                print ("L", hVal)
 
-                frontier.append(['R', potential_state,hVal+step_cost])
+                frontier.append(['R', potential_state,hVal+step_cost,level])
                 state_space.append(potential_state)
                 po = True
         if blank_pos in [0,1,2,3,4,5]: #Check for the possibility of moving blank space to below
@@ -96,7 +100,7 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
                     hVal = MDistance(curr_state,goal_state)
                 else:
                     hVal = NScore(curr_state,goal_state)
-                frontier.append(['D', potential_state,hVal+step_cost])
+                frontier.append(['D', potential_state,hVal+step_cost,level])
                 state_space.append(potential_state)
                 po = True
         if blank_pos in [3,4,5,6,7,8]: #Check for the possibility of moving blank space to above
@@ -107,7 +111,7 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
                     hVal = MDistance(curr_state,goal_state)
                 else:
                     hVal = NScore(curr_state,goal_state)
-                frontier.append(['U', potential_state,hVal+step_cost])
+                frontier.append(['U', potential_state,hVal+step_cost,level])
                 state_space.append(potential_state)
                 po = True
 
@@ -115,10 +119,12 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
             if curr_state in solution:
                 solution.remove(curr_state)
             step_cost -= 1
-            totalNodes[step_cost].remove(curr_state)
+            if len(solution) == 0:
+                return "No solution"
+            curr_state = solution[-1]
 
         #print("FRONT",frontier)
-        min_fVal = INFINITY
+        
         for item in frontier:           #the state with minimum f value becomes current state
             
             if item[2] <= min_fVal:
@@ -130,8 +136,11 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
                 #print("NODE",node,"\n")
                 frontier.remove(node)
                 solution.append(node)
+        level+=1;
+        print (frontier)
+        
 
-        totalNodes[step_cost] = frontier    
+           
         step_cost+=1       
         if(curr_state == goal_state):   #stop the loop if goal is reached
             goalReached = True
@@ -142,11 +151,8 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=0):
 
 
 def main():
-    #curr_state = [8,1,3,0,2,4,7,6,5]
-    #goal_state = [1,2,3,8,0,4,7,6,5]
 
     curr_state ,goal_state = ReadIn("Sample_Input.txt")
-    print("hi")
     # get file
     # get initial state and goal state using readState
                      
@@ -173,6 +179,10 @@ def main():
     print("\t")
     for item in (solution):
         print(item[-1],end=" ")
+    
+    #frontier, solution = Asearch("h2",curr_state,goal_state)
+
+   
     # output:
     # initial state
     # goal state
