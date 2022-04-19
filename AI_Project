@@ -148,7 +148,7 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
     return totalNodes,solution          
 
 
-def format (curr_state, goal_state, filename):
+def format (curr_state, goal_state, filename, hfunc):
     filename = open(filename,"w");
     for i in range(len(curr_state)):
         if (i % 3 == 0):
@@ -162,7 +162,7 @@ def format (curr_state, goal_state, filename):
             print('\t', file = filename)
         print(goal_state[i], end=" ", file = filename)    
 
-    frontier, solution = Asearch("MD",curr_state,goal_state)
+    frontier, solution = Asearch(hfunc,curr_state,goal_state)
 
     print('\n' , file = filename)
     print(len(solution), file = filename)
@@ -176,7 +176,7 @@ def main():
     #curr_state = [2,0,6,1,3,7,4,5,8]
     #goal_state = [1,2,0,7,5,3,4,8,6]
     curr_state ,goal_state = ReadIn("Input3.txt")
-    format (curr_state, goal_state, "outputTry1.txt")
+    format (curr_state, goal_state, "outputTry1.txt" , "MD")
     # get file
     # get initial state and goal state using readState
     #print(MDistance(curr_state,goal_state))              
