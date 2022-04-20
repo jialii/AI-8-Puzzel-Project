@@ -41,12 +41,12 @@ def NScore(curr_state, goal_state):
     P = MDistance(curr_state,goal_state)
     S = 0
     Nscore = 0
-    dic = {};
-    count = 0;
+    dic = {}
+    count = 0
     order = [0,1,2,5,8,7,6,3]
     for i in range(8):
         if goal_state[order[i]] == 0:
-            continue;
+            continue
         if i == 7:
             dic [goal_state[order[i]]] = goal_state[order[0]]
         else:
@@ -56,21 +56,21 @@ def NScore(curr_state, goal_state):
     while count < 8:
         if curr_state[count] == 0:
             count+=1
-            continue;
-        prev = curr_state[order[count]];
+            continue
+        prev = curr_state[order[count]]
         if count == 7:
-            last = curr_state[order[0]];
+            last = curr_state[order[0]]
         else:
-            last = curr_state[order[count+1]];
+            last = curr_state[order[count+1]]
         if prev == 0:
-            count+=1;
+            count+=1
             continue
         if prev not in dic:
-            S+=2;
-            count+=1;
-            continue;
+            S+=2
+            count+=1
+            continue
         if dic[prev] != last:
-            S+=2;
+            S+=2
         count+=1
     Nscore = P + 3 * S
     return Nscore
@@ -82,16 +82,16 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
     state_space = [];  #This makes sure there is no repeated states.  
     totalNodes = 1
     solution = []
-    level = 0;
+    level = 0
     po = False
-    if (h == "MD"):
+    if (h == "MD"):         #determine the heuristic function used
         hVal = MDistance(curr_state,goal_state)
     else:
         hVal = NScore(curr_state,goal_state)
     solution.append(["",curr_state,hVal])
     frontier = []
     
-    while goalReached == False :
+    while goalReached == False :        #if not goal
         if not curr_state in state_space:
             state_space.append(curr_state)
         blank_pos = curr_state.index(0)
@@ -148,11 +148,11 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
                 po = True
                 totalNodes+=1
 
-        if(po == False):
+        if(po == False):            #if there isn't new potential state for the current state 
             if curr_state in solution:
                 solution.remove(curr_state)
                 curr_state = solution[-1][1]
-            step_cost -= 1
+            step_cost -= 1          #return because we have reached the deadend
            
         min_fVal = INFINITY
         for item in frontier:           #the state with minimum f value becomes current state
@@ -160,38 +160,31 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
             if item[2] <= min_fVal:
                 min_fVal = item[2]
                 node = item             #store the node with smallest f value
-        #print (frontier)      
-        if node[-1] <= solution[-1][-1] and len(solution)!=1:
-            print ("true")
-            solution.pop();
-            step_cost-=1;
-        print (frontier)
+        if node[-1] <= solution[-1][-1] and len(solution)!=1: 
+            solution.pop()
+            step_cost-=1
         curr_state = node[1]
-                #print("NODE",node,"\n")
-        frontier.remove(node)
-        solution.append(node)
-        level +=1
-        print ("sol: ", solution)
-        
+        frontier.remove(node)           # we have reached this node
+        solution.append(node)           # we chose this path
+        level +=1        
 
         step_cost+=1       
         if(curr_state == goal_state):   #stop the loop if goal is reached
             goalReached = True
         
-    #print(solution,"\n")   
     return totalNodes,solution          
 
 
 def format (curr_state, goal_state, filename, hfunc):
-    filename = open(filename,"w");
-    for i in range(len(curr_state)):
+    filename = open(filename,"w")
+    for i in range(len(curr_state)):        #output the initial state
         if (i % 3 == 0):
             print('\t', file = filename)
         print(curr_state[i], end=" ", file = filename)
 
     print('\t', file = filename)
 
-    for i in range(len(goal_state)):
+    for i in range(len(goal_state)):        #output the goal state
         if (i % 3 == 0):
             print('\t', file = filename)
         print(goal_state[i], end=" ", file = filename)    
@@ -199,39 +192,29 @@ def format (curr_state, goal_state, filename, hfunc):
     frontier, solution = Asearch(hfunc,curr_state,goal_state)
 
     print('\n' , file = filename)
-    print(len(solution), file = filename)
-    print(frontier, file = filename)
-    for item in (solution):
+    print(len(solution), file = filename)   #d
+    print(frontier, file = filename)        #total number of nodes
+    for item in (solution):                 #action
         if(item[0]!=""):
             print(item[0],end=" ", file = filename)
     print("\t", file = filename)
-    for item in (solution):
+    for item in (solution):                 #f values
         print(item[2],end=" ", file = filename)
 def main():
-    #curr_state = [2,0,6,1,3,7,4,5,8]
-    #goal_state = [1,2,0,7,5,3,4,8,6]
-    
+    #get initialize state and goal state from ReadIn
+    #then use format function to generate output 
+
     #curr_state, goal_state = ReadIn("Input1.txt")
     #format (curr_state, goal_state, "output1h1.txt" , "MD")
     #format (curr_state, goal_state, "output1h2.txt" , "h2")
-    curr_state, goal_state = ReadIn("Input2.txt")
+    #curr_state, goal_state = ReadIn("Input2.txt")
     #format (curr_state, goal_state, "output2h1.txt" , "MD")
     #format (curr_state, goal_state, "output2h2.txt" , "h2")
     curr_state, goal_state = ReadIn("Input3.txt")
     #format (curr_state, goal_state, "output3h1.txt" , "MD")
-    format (curr_state, goal_state, "output3h2.txt" , "h2")
-    # get file
-    # get initial state and goal state using readState
-    #print(MDistance(curr_state,goal_state))              
-    #output = open("fname","w");
-
-    # output:
-    # initial state
-    # goal state
-    # depth level d len(solutions)
-    # total of nodes generated  len(frontier)
-    # solution  solutions[0]
-    # f(n) value    solutions[2]
+    format (curr_state, goal_state, "output3h1.txt" , "MD")
+  
+   
 
 
 main()
