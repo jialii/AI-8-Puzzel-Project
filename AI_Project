@@ -66,12 +66,10 @@ def NScore(curr_state, goal_state):
             count+=1;
             continue
         if prev not in dic:
-            print ("ptrb: ", prev)
             S+=2;
             count+=1;
             continue;
         if dic[prev] != last:
-            print ("not ", prev)
             S+=2;
         count+=1
     Nscore = P + 3 * S
@@ -84,6 +82,7 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
     state_space = [];  #This makes sure there is no repeated states.  
     totalNodes = 1
     solution = []
+    level = 0;
     po = False
     if (h == "MD"):
         hVal = MDistance(curr_state,goal_state)
@@ -104,7 +103,7 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
                     hVal = MDistance(potential_state,goal_state)
                 else:
                     hVal = NScore(potential_state,goal_state)
-                frontier.append(['L', potential_state,hVal+step_cost])
+                frontier.append(['L', potential_state,hVal+step_cost,level])
                 state_space.append(potential_state)
                 po = True
                 totalNodes+=1
@@ -118,7 +117,7 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
                 else:
                     hVal = NScore(potential_state,goal_state)
 
-                frontier.append(['R', potential_state,hVal+step_cost])
+                frontier.append(['R', potential_state,hVal+step_cost,level])
                 state_space.append(potential_state)
                 po = True
                 totalNodes+=1
@@ -131,7 +130,7 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
                     hVal = MDistance(potential_state,goal_state)
                 else:
                     hVal = NScore(potential_state,goal_state)
-                frontier.append(['D', potential_state,hVal+step_cost])
+                frontier.append(['D', potential_state,hVal+step_cost,level])
                 state_space.append(potential_state)
                 po = True
                 totalNodes+=1
@@ -144,7 +143,7 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
                     hVal = MDistance(potential_state,goal_state)
                 else:
                     hVal = NScore(potential_state,goal_state)
-                frontier.append(['U', potential_state,hVal+step_cost])
+                frontier.append(['U', potential_state,hVal+step_cost,level])
                 state_space.append(potential_state)
                 po = True
                 totalNodes+=1
@@ -152,6 +151,7 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
         if(po == False):
             if curr_state in solution:
                 solution.remove(curr_state)
+                curr_state = solution[-1][1]
             step_cost -= 1
            
         min_fVal = INFINITY
@@ -161,11 +161,18 @@ def Asearch(h, curr_state, goal_state,goalReached=False,step_cost=1):
                 min_fVal = item[2]
                 node = item             #store the node with smallest f value
         #print (frontier)      
-            
+        if node[-1] <= solution[-1][-1] and len(solution)!=1:
+            print ("true")
+            solution.pop();
+            step_cost-=1;
+        print (frontier)
         curr_state = node[1]
                 #print("NODE",node,"\n")
         frontier.remove(node)
         solution.append(node)
+        level +=1
+        print ("sol: ", solution)
+        
 
         step_cost+=1       
         if(curr_state == goal_state):   #stop the loop if goal is reached
@@ -198,7 +205,7 @@ def format (curr_state, goal_state, filename, hfunc):
         print(item[0],end=" ", file = filename)
     print("\t", file = filename)
     for item in (solution):
-        print(item[-1],end=" ", file = filename)
+        print(item[2],end=" ", file = filename)
 def main():
     #curr_state = [2,0,6,1,3,7,4,5,8]
     #goal_state = [1,2,0,7,5,3,4,8,6]
@@ -207,11 +214,11 @@ def main():
     #format (curr_state, goal_state, "output1h1.txt" , "MD")
     #format (curr_state, goal_state, "output1h2.txt" , "h2")
     curr_state, goal_state = ReadIn("Input2.txt")
-    format (curr_state, goal_state, "output2h1.txt" , "MD")
+    #format (curr_state, goal_state, "output2h1.txt" , "MD")
     #format (curr_state, goal_state, "output2h2.txt" , "h2")
-    #curr_state, goal_state = ReadIn("Input3.txt")
+    curr_state, goal_state = ReadIn("Input3.txt")
     #format (curr_state, goal_state, "output3h1.txt" , "MD")
-    #format (curr_state, goal_state, "output3h2.txt" , "h2")
+    format (curr_state, goal_state, "output3h2.txt" , "h2")
     # get file
     # get initial state and goal state using readState
     #print(MDistance(curr_state,goal_state))              
