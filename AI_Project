@@ -202,7 +202,8 @@ def format (curr_state, goal_state, filename, hfunc):
     print(len(solution), file = filename)
     print(frontier, file = filename)
     for item in (solution):
-        print(item[0],end=" ", file = filename)
+        if(item[0]!=""):
+            print(item[0],end=" ", file = filename)
     print("\t", file = filename)
     for item in (solution):
         print(item[2],end=" ", file = filename)
